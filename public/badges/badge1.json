@@ -1,0 +1,7 @@
+{
+	"name": "Good Badge",
+	"description": "Issues great new Open Badges to self.",
+	"image": "http://localhost:5000/badge1image.png",
+	"criteria": "http://localhost:5000/badge1criteria.html",
+	"issuer": "http://localhost:5000/"
+}
