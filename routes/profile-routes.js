@@ -44,7 +44,7 @@ router.get('/issuebadge', authCheck, (req, res) => {
 router.post('/issuebadge', authCheck, (req, res) => {
   Badge.findOne({name: req.body.badgename}, (err, badge) => {
     var badgeClassURI = req.protocol + '://' + req.get('host') +
-      '/resources/badges/' + badge.get('_id');
+      '/resources/badge-defs/' + badge.get('_id');
     new Assertion({
       recipient: req.body.recipientname,
       badge: badgeClassURI
