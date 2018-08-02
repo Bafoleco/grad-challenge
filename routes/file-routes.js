@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const Badge = require('../models/badge-model')
+const Badge = require('../models/badge-model');
+const Assertion = require('../models/assertion-model');
 
 router.get('/badge-defs/:badgeDefId', (req, res) => {
   var badgeDefId = req.params.badgeDefId;
@@ -16,6 +17,20 @@ router.get('/badge-defs/:badgeDefId', (req, res) => {
       tags: badgeClass.get('tags')
     }
     res.send(badgeClassJSON)
+  });
+});
+
+router.get('/assertions/:assertionId', (req, res) => {
+  var assertionId = req.params.assertionId;
+  var fullURL = req.protocol + '://' + req.get('host') + req.originalUrl;
+  Assertion.findById(assertionId, (err, assertion) => {
+    var assertionJSON = {
+      id: fullURL,
+      type: 'assertion',
+      recipient: assertion.get('recipient'),
+      badge: assertion.get('badge'),
+    }
+    res.send(assertionJSON);
   });
 });
 

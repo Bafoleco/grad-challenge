@@ -41,14 +41,15 @@ mongoose.connect(keys.mongodb.dbURI, () => {
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/resources', fileRoutes);
+
 //home route
 app.get('/', (req, res) => {
   res.render('home');
 });
 //static hosting
 app.use(express.static('public'));
-
 //start
-app.listen(5000, function() {
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
   console.log('listening on port 5000');
 });
