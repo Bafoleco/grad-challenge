@@ -34,8 +34,4 @@ router.get('/assertions/:assertionId', (req, res) => {
   });
 });
 
-<<<<<<< HEAD
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> a7da99ca4066cefd4d00548b603cc4b9e94f8b6a
