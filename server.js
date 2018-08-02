@@ -1,14 +1,19 @@
+//packages
 const express = require('express');
 const app = express();
 const path = require('path');
-const authRoutes = require('./routes/auth-routes')
-const profileRoutes = require('./routes/profile-routes')
-const passportSetup = require('./config/passport-setup');
 const mongoose = require('mongoose');
-const keys = require('./config/keys')
 const cookieSession = require('cookie-session');
 const passport = require('passport');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+//routing
+const authRoutes = require('./routes/auth-routes');
+const profileRoutes = require('./routes/profile-routes');
+const fileRoutes = require('./routes/file-routes');
+//private keys/values
+const keys = require('./config/keys')
+//extra code
+const passportSetup = require('./config/passport-setup');
 
 //set up view engine
 app.set('view engine', 'ejs');
@@ -35,12 +40,11 @@ mongoose.connect(keys.mongodb.dbURI, () => {
 //setup routes
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
-
+app.use('/resources', fileRoutes);
 //home route
 app.get('/', (req, res) => {
   res.render('home');
 });
-
 //static hosting
 app.use(express.static('public'));
 
