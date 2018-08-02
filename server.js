@@ -48,7 +48,6 @@ app.get('/', (req, res) => {
 });
 //static hosting
 app.use(express.static('public'));
-
 //start
 app.listen(process.env.PORT, function() {
   console.log('listening on port 5000');
