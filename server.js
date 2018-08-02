@@ -41,6 +41,7 @@ mongoose.connect(keys.mongodb.dbURI, () => {
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/resources', fileRoutes);
+
 //home route
 app.get('/', (req, res) => {
   res.render('home');
@@ -49,6 +50,6 @@ app.get('/', (req, res) => {
 app.use(express.static('public'));
 
 //start
-app.listen(5000, function() {
+app.listen(process.env.PORT, function() {
   console.log('listening on port 5000');
 });
