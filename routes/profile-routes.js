@@ -27,7 +27,7 @@ router.post('/createbadge', (req, res) => {
   Profile.findOne({owner: req.user._id}).then((profile) => {
     var profileIRI = req.protocol + '://' + req.get('host') +
       '/resources/profiles/' + profile.get('_id');
-   }
+   });
   new Badge({
     username: req.user.username,
     id: ' ',
