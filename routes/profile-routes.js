@@ -22,22 +22,22 @@ router.get('/createbadge', authCheck, (req, res) => {
 });
 
 router.post('/createbadge', (req, res) => {
-  console.log(req.body.badgename);
-  //get the string for the profile of the badges issuer
+  //TODO add real handling for no profile
   Profile.findOne({owner: req.user._id}).then((profile) => {
     var profileIRI = req.protocol + '://' + req.get('host') +
       '/resources/profiles/' + profile.get('_id');
-   });
-  new Badge({
-    username: req.user.username,
-    id: ' ',
-    name: req.body.badgename,
-    description: ' ',
-    image: ' ',
-    criteria: ' ',
-    issuer: profileIRI,
-    tags: ' '
-  }).save();
+      console.log(profileIRI);
+    new Badge({
+      username: req.user.username,
+      id: ' ',
+      name: req.body.badgename,
+      description: ' ',
+      image: ' ',
+      criteria: ' ',
+      issuer: profileIRI,
+      tags: ' '
+    }).save();
+  });
   res.redirect('/profile');
 });
 
@@ -73,6 +73,7 @@ router.post('/createprofile', authCheck, (req, res) => {
         owner: req.user._id
       }).save();
     }
+    console.log('Found Profile')
   })
   res.redirect('/profile');
 });
