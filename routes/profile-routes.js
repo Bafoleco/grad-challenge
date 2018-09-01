@@ -23,6 +23,11 @@ router.get('/createbadge', authCheck, (req, res) => {
 
 router.post('/createbadge', (req, res) => {
   console.log(req.body.badgename);
+  //get the string for the profile of the badges issuer
+  Profile.findOne({owner: req.user._id}).then((profile) => {
+    var profileIRI = req.protocol + '://' + req.get('host') +
+      '/resources/profiles/' + profile.get('_id');
+   }
   new Badge({
     username: req.user.username,
     id: ' ',
@@ -30,7 +35,7 @@ router.post('/createbadge', (req, res) => {
     description: ' ',
     image: ' ',
     criteria: ' ',
-    issuer: ' ',
+    issuer: profileIRI,
     tags: ' '
   }).save();
   res.redirect('/profile');
@@ -59,7 +64,7 @@ router.get('/createprofile', authCheck, (req, res) => {
 });
 
 router.post('/createprofile', authCheck, (req, res) => {
-  Profile.findOne({_id: req.user._id}).then((profile) => {
+  Profile.findOne({owner: req.user._id}).then((profile) => {
     if(!profile) {
       new Profile({
         name: req.user.username,
@@ -71,7 +76,5 @@ router.post('/createprofile', authCheck, (req, res) => {
   })
   res.redirect('/profile');
 });
-
-
 
 module.exports = router;
