@@ -19,7 +19,7 @@ router.get('/badge-defs/:badgeDefId', (req, res) => {
         description: badgeClass.get('description'),
         image: badgeClass.get('image'),
         criteria: badgeClass.get('criteria'),
-        issuer: badgeClass.get('issuer')
+        issuer: badgeClass.get('issuer'),
         tags: badgeClass.get('tags')
       }
       res.send(badgeClassJSON)
