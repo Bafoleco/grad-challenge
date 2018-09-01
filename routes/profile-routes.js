@@ -31,9 +31,9 @@ router.post('/createbadge', (req, res) => {
       username: req.user.username,
       id: ' ',
       name: req.body.badgename,
-      description: ' ',
-      image: ' ',
-      criteria: ' ',
+      description: req.body.description,
+      image: req.body.image,
+      criteria: req.body.criteria,
       issuer: profileIRI,
       tags: ' '
     }).save();

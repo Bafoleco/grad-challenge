@@ -16,11 +16,11 @@ router.get('/badge-defs/:badgeDefId', (req, res) => {
         id: fullURL,
         type: 'BadgeClass',
         name: badgeClass.get('name'),
-        // description: badgeClass.get('description'),
-        // image: badgeClass.get('image'),
-        // criteria: badgeClass.get('criteria'),
+        description: badgeClass.get('description'),
+        image: badgeClass.get('image'),
+        criteria: badgeClass.get('criteria'),
         issuer: badgeClass.get('issuer')
-        // tags: badgeClass.get('tags')
+        tags: badgeClass.get('tags')
       }
       res.send(badgeClassJSON)
     }
@@ -43,6 +43,7 @@ router.get('/assertions/:assertionId', (req, res) => {
         recipient: {
           type: 'name',
           identity: assertion.get('recipient'),
+          hashed: 'false'
         },
         issuedOn: dateString,
         verification: {
