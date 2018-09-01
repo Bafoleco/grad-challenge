@@ -16,11 +16,11 @@ router.get('/badge-defs/:badgeDefId', (req, res) => {
         id: fullURL,
         type: 'BadgeClass',
         name: badgeClass.get('name'),
-        description: badgeClass.get('description'),
-        image: badgeClass.get('image'),
+        // description: badgeClass.get('description'),
+        // image: badgeClass.get('image'),
         criteria: badgeClass.get('criteria'),
-        issuer: badgeClass.get('issuer'),
-        tags: badgeClass.get('tags')
+        issuer: badgeClass.get('issuer')
+        // tags: badgeClass.get('tags')
       }
       res.send(badgeClassJSON)
     }
