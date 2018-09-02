@@ -1,4 +1,4 @@
-//routing to (and creation of) dynamically served files
+  //routing to (and creation of) dynamically served files
 
 const router = require('express').Router();
 const Badge = require('../models/badge-model');
@@ -33,6 +33,7 @@ router.get('/badge-defs/:badgeDefId', (req, res) => {
 router.get('/assertions/:assertionId', (req, res) => {
   var assertionId = req.params.assertionId;
   var fullURL = req.protocol + '://' + req.get('host') + req.originalUrl;
+  //TODO make string not change
   var dateString = new Date().toISOString();
   Assertion.findById(assertionId, (err, assertion) => {
     if(assertion) {
