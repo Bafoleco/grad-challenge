@@ -43,7 +43,7 @@ router.get('/assertions/:assertionId', (req, res) => {
         recipient: {
           type: 'name',
           identity: assertion.get('recipient'),
-          hashed: 'false'
+          hashed: false
         },
         issuedOn: dateString,
         verification: {
@@ -51,7 +51,9 @@ router.get('/assertions/:assertionId', (req, res) => {
         },
         badge: assertion.get('badge')
       }
-      res.send(assertionJSON);
+      //false value must not be incased in quotation marks, extra proccesing needed
+      var assertionString = JSON.stringify(assertionJSON);
+      res.send(assertionString);
     }
     else {
       res.send('No assertion found for that ID');
