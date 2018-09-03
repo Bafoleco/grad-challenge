@@ -1,0 +1,71 @@
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
+pre, form, fieldset, table, th, td, nav { margin: 0; padding: 0; }
+
+body {
+  font-family: arial;
+  height: 100%;
+  width: 100%;
+}
+nav {
+  background-color: crimson;
+  grid-area: navbar;
+  width: 100%;
+}
+
+nav button {
+  margin: 20px 10px 0px 10px;
+  display: inline-block;
+  width: 150px;
+  height: 30px;
+  background-color: white;
+  border-radius: 4px 4px 0px 0px;
+  border-style: solid;
+  border-color: darkgrey;
+  border-bottom: 0px;
+}
+
+nav button:hover {
+  background-color: lightgrey;
+
+}
+
+ul.vertical button {
+  display: block;
+  width: 100px;
+}
+
+ul.sub-vertical button {
+  display: block;
+  width: 60px;
+  margin-left: 50px;
+}
+
+#biggrid {
+  display: grid;
+  height: 100%;
+  grid-template-rows: 50px 1fr;
+  grid-template-areas:
+  "navbar"
+  "body";
+}
+
+#CreateClassGUI {
+  display: grid;
+  grid-area: body;
+  grid-template-columns 1fr 1fr;
+  grid-template-areas:
+  "leftcolunm rightcolumn"
+
+}
+
+div.leftbar {
+  grid-area: leftcolunm;
+  width: auto;
+  height: auto;
+}
+
+div.rightbar {
+  grid-area: rightcolumn;
+  width: auto;
+  height: auto;
+}

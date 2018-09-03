@@ -10,6 +10,8 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
 const fileRoutes = require('./routes/file-routes');
+const reactRoutes = require('./routes/react-routes');
+
 //private keys/values
 const keys = require('./config/keys')
 //extra code
@@ -26,11 +28,15 @@ app.use(cookieSession({
 //initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use(bodyParser.json());
+app.use(bodyParser.json({type: 'text/plain'}));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+//static hosting of frontend java script
+app.use('/production-react', express.static(__dirname + '/production-react'));
+app.use('/css', express.static(__dirname + '/css'));
+
 
 //connect to mongodb (maybe temp)
 mongoose.connect(keys.mongodb.dbURI, () => {
@@ -41,13 +47,16 @@ mongoose.connect(keys.mongodb.dbURI, () => {
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/resources', fileRoutes);
+app.use('/react', reactRoutes);
 
 //home route
 app.get('/', (req, res) => {
   res.render('home');
 });
+
 //static hosting
 app.use(express.static('public'));
+
 //start
 var port = process.env.PORT || 5000;
 app.listen(port, function() {

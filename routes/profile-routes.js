@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Badge = require('../models/badge-model');
 const Assertion = require('../models/assertion-model');
 const Profile = require('../models/profile-model');
+const Class = require('../models/class-model');
 
 //TODO input validation, unsanitized input especially when combined with incorporating variables in ejs
 const authCheck = (req, res, next) => {
@@ -77,5 +78,20 @@ router.post('/createprofile', authCheck, (req, res) => {
   })
   res.redirect('/profile');
 });
+
+
+//main
+router.get('/main', authCheck, (req, res) => {
+  res.render('main');
+});
+
+router.post('/createclass', authCheck, (req, res) => {
+  new Class({
+    className: req.body.classname,
+    teacher: [req.user._id],
+    student: []
+  }).save();
+  res.redirect('/profile');
+})
 
 module.exports = router;
