@@ -12,4 +12,6 @@ Sept 1, 2018 - did the work needed to finish issuing open badges compliant badge
 
 Sept 2, 2018 - started the work to make the system of badge issuance done through interactive GUI - 5 hr
 
-Jan 5, 2019 - did the work to nearly finish class addition system in react - 4 hr 
+Jan 5, 2019 - did the work to nearly finish class addition system in react - 4 hr
+
+Jan 8, 2019 - worked on getting the repository in order to put on GitHub - 1 hr
