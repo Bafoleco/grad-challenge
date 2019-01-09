@@ -1,0 +1,15 @@
+Log of grad challenge hours
+
+July 28, 18 - Initial project work, created database and log in system - 4 hr
+
+Aug 1, 2018 - worked on starting to create the ability to host an issue badges - 2 hr
+
+Aug 2, 2018 - worked on sending verifiable badges, issuer profiles, hosted in Heroku - 6hr
+
+Aug 15, 2018 - fixed crashes in the system which allowed public documents to be generated from database - 2 hr
+
+Sept 1, 2018 - did the work needed to finish issuing open badges compliant badges - 5 hr
+
+Sept 2, 2018 - started the work to make the system of badge issuance done through interactive GUI - 5 hr
+
+Jan 5, 2019 - did the work to nearly finish class addition system in react - 4 hr 
