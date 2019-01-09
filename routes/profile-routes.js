@@ -27,7 +27,6 @@ router.post('/createbadge', (req, res) => {
   Profile.findOne({owner: req.user._id}).then((profile) => {
     var profileIRI = req.protocol + '://' + req.get('host') +
       '/resources/profiles/' + profile.get('_id');
-      console.log(profileIRI);
     new Badge({
       username: req.user.username,
       id: ' ',
@@ -74,7 +73,6 @@ router.post('/createprofile', authCheck, (req, res) => {
         owner: req.user._id
       }).save();
     }
-    console.log('Found Profile')
   })
   res.redirect('/profile');
 });
@@ -82,9 +80,11 @@ router.post('/createprofile', authCheck, (req, res) => {
 
 //main
 router.get('/main', authCheck, (req, res) => {
+  console.log('Main');
   res.render('main');
 });
 
+//create a class
 router.post('/createclass', authCheck, (req, res) => {
   new Class({
     className: req.body.classname,
@@ -93,5 +93,19 @@ router.post('/createclass', authCheck, (req, res) => {
   }).save();
   res.redirect('/profile');
 })
+
+//add a student to a class
+
+router.post('/addstudent', authCheck, (req, res) => {
+  const classID = req.body.classID;
+  const personID = req.body.personID;
+  Class.findById(classID).then((classToEnroll) => {
+    console.log(classToEnroll);
+    classToEnroll.student.push(personID);
+    classToEnroll.save((err) => {
+      if (err) return handleError(err);
+    });
+  })
+});
 
 module.exports = router;

@@ -12,8 +12,6 @@ function sendUserData(req, res, classArray) {
     id: req.user._id,
     classes: classArray
   }
-  console.log(classArray);
-  console.log(response);
   res.send(response);
 }
 
@@ -39,7 +37,6 @@ router.get('/userinfo', (req, res) => {
 
 //api which exposes a list of all Users to the frontend
 function sendPeopleData(req, res, peopleArray) {
-  console.log('sent data');
   const response = {
     people: peopleArray
   }
@@ -49,7 +46,6 @@ function sendPeopleData(req, res, peopleArray) {
 
 router.get('/peopleinfo', (req, res) => {
   var peopleArray = [];
-
   var ctr = 0;
   User.find({}).exec((err, people) => {
     if(people.length == 0) {
@@ -65,4 +61,62 @@ router.get('/peopleinfo', (req, res) => {
   });
 });
 
+
+//takes a array of user object ids and returns an array of user objects
+async function returnMemberArray(memberIds) {
+  const promises = memberIds.map((memberId) => {
+    return User.findById(memberId).then((member) => {
+        return member;
+    });
+  });
+  const memberArray = await Promise.all(promises).then((memberArray) => {
+    return memberArray}
+  );
+  return memberArray;
+}
+
+//takes an express.js req and res and an array of member ids,
+//then sends an array of the associated member objects in response
+async function sendMemberData(req, res, memberIds) {
+  const memberArray = await returnMemberArray(memberIds);
+  const response = {
+    members: memberArray
+  }
+  res.send(response);
+}
+
+//takes in a class object and returns a promise which resolves to a array of unique members
+async function getUniqueMemberIds(classObject) {
+  const uniqueMemberIdArrayReturnPromise = new Promise((resolve, reject) => {
+    const memberIdArray = classObject.student.concat(classObject.teacher);
+    const uniqueMemberIdArray = memberIdArray.filter(function(item, pos) {
+      return memberIdArray.indexOf(item) == pos;
+    });
+    if(uniqueMemberIdArray) {
+      resolve(uniqueMemberIdArray)
+    }
+    else {
+      reject(Error('bad thing'))
+    }
+  });
+  return uniqueMemberIdArrayReturnPromise;
+}
+
+
+//api which returns the students enrolled in the selected claass
+router.get('/getmembers/:classId', (req, res) => {
+  const classId = req.params.classId;
+  console.log('Hello');
+  Class.findById(classId).exec((err, returnedClass) => {
+    if(err) {
+      console.log('Class not found for that Id');
+      res.send('ERROR: Class not found for that id');
+    }
+    else {
+      getUniqueMemberIds(returnedClass).then((uniqueMemberIdArray) => {
+        sendMemberData(req, res, uniqueMemberIdArray);
+      });
+    }
+  });
+});
 module.exports = router;

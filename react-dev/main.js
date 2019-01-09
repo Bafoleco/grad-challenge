@@ -15,74 +15,126 @@ function Body(props) {
     return ( <div>  error </div>);
 }
 
-
 class ClassListElement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
-      students: ['Bobs', 'joe']
+      members: []
     }
     this.onClick = this.onClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.getMembers(this.props.ownedClass._id);
+  }
+
+  getMembers(classId) {
+      fetch('/react/getmembers/' + classId)
+        .then((response) => response.json())
+        .then((json) => {
+          this.setState(() => {
+            return {members: json.members};
+          });
+        });
+  }
+
+   onClick() {
+    console.log(this.props.ownedClass);
+    this.props.reportClassClick(this.props.ownedClass);
+    this.setState((prevState) => {
+      return {isOpen: !prevState.isOpen}
+    });
+    this.getMembers(this.props.ownedClass._id);
+  }
+
+  render() {
+    return(
+      <div>
+        <button id={this.getClassNameId()} key={this.props.ownedClass._id} onClick={this.onClick}> {this.props.label} </button>
+        {this.renderStudents()}
+      </div>
+    );
   }
 
   renderStudents() {
     if(this.state.isOpen) {
       return (
         <ul className="sub-vertical">
-          {this.state.students.map((student) => (
-            //replace with id when students become objectgs
-            <button key={student.length}> {student} </button>
+          {this.state.members.map((member) => (
+            <button key={member._id}> {member.username} </button>
           ))}
         </ul>
       );
     }
   }
 
+  getClassNameId() {
+    var isActive = (this.props.ownedClass._id == this.props.mostRecentClass()._id);
+
+    if(isActive) {
+      return "active"
+    }
+    else return "inactive";
+  }
+}
+
+class ClassList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    if(this.props.ownedClass) {
+      console.log(this.props.ownedClass.className + ' ');
+    }
+    return (
+      <ul className="vertical">
+        {this.props.classes.map((ownedClass) => (
+          <ClassListElement reportClassClick={this.props.reportClassClick}
+          ownedClass={ownedClass} label={ownedClass.className} key={ownedClass._id} mostRecentClass={this.props.mostRecentClass} >
+           {ownedClass.className} </ClassListElement>
+        ))}
+      </ul>
+    );
+  }
+}
+
+class StudentListElement extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+
+  }
   render() {
     return(
       <div>
-        <button key={this.props.ownedClass._id} onClick={this.onClick}> {this.props.label} </button>
-        {this.renderStudents()}
-
+        <button onClick={this.onClick} key={this.props.person._id}> {this.props.label} </button>
       </div>
     );
   }
 
-  onClick() {
-    this.setState((prevState) => {
-      return {isOpen: !prevState.isOpen}
-    })
-    console.log('staate switched to ' + this.state.isOpen)
-
-  }
-
-
-}
-
-class ClassList extends React.Component {
-  render() {
-    return (
-      <ul className="vertical">
-        {this.props.classes.map((ownedClass) => (
-          <ClassListElement ownedClass={ownedClass} label={ownedClass.className} key={ownedClass._id} > {ownedClass.className} </ClassListElement>
-        ))}
-      </ul>
-    );
-  }
+   onClick() {
+     this.props.reportPersonClick(this.props.person)
+   }
 }
 
 class StudentList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <ul className="vertical">
-        {this.props.classes.map((ownedClass) => (
-          <ClassListElement ownedClass={ownedClass} label={ownedClass.className} key={ownedClass._id} > {ownedClass.className} </ClassListElement>
+        {this.props.people.map((person) => (
+          <StudentListElement person={person} reportPersonClick={this.props.reportPersonClick}
+          label={person.username} key={person._id} > {person.username} </StudentListElement>
         ))}
       </ul>
     );
   }
 }
+
 class CreateClassGUI extends React.Component {
 
   constructor(props) {
@@ -91,18 +143,27 @@ class CreateClassGUI extends React.Component {
     this.state = {
       classes: [],
       people: [],
-      text: ' '
+      text: ' ',
+      mostRecentClass: null
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
+    this.reportClassClick = this.reportClassClick.bind(this);
+    this.reportPersonClick = this.reportPersonClick.bind(this);
+    this.getMostRecentClass = this.getMostRecentClass.bind(this);
   }
 
   componentDidMount() {
     fetch('/react/userinfo')
       	.then((response) => response.json())
-        .then((userJson) => this.setState(() => {
-          return {classes: userJson.classes};
-    }));
+        .then((userJson) => {
+          this.setState(() => {return {
+            classes: userJson.classes,
+            mostRecentClass: userJson.classes[0]
+          }});
+        }
+    );
+
     fetch('/react/peopleinfo')
       	.then((response) => response.json())
         .then((peopleJson) => this.setState(() => {
@@ -111,11 +172,15 @@ class CreateClassGUI extends React.Component {
   }
 
   render() {
+    if(this.state.mostRecentClass) {
+      console.log(this.state.mostRecentClass.className + 'selected class');
+
+    }
     return(
       <div id="CreateClassGUI">
         <div className="leftbar">
           <h3>Classes</h3>
-          <ClassList classes={this.state.classes} />
+          <ClassList reportClassClick={this.reportClassClick} classes={this.state.classes} mostRecentClass={this.getMostRecentClass}/>
           <form onSubmit={this.handleAdd}>
             <label htmlFor="new-class">
               Create Class
@@ -132,6 +197,7 @@ class CreateClassGUI extends React.Component {
         </div>
         <div className="rightbar">
           <h3> Students </h3>
+          <StudentList reportPersonClick={this.reportPersonClick} people={this.state.people}/>
         </div>
       </div>
     );
@@ -162,6 +228,32 @@ class CreateClassGUI extends React.Component {
     fetch('/profile/createclass', {
       method: 'POST',
       body: data,
+    });
+  }
+
+//this is propagated down to the classListElements
+  reportClassClick(ownedClass) {
+    console.log(ownedClass);
+    this.setState((prevState) => {
+      return {mostRecentClass: ownedClass}
+    });
+  }
+
+  getMostRecentClass() {
+    return this.state.mostRecentClass;
+  }
+
+  reportPersonClick(person) {
+    console.log('person clicked');
+    const data = JSON.stringify({
+      classID: this.state.mostRecentClass._id,
+      personID: person._id
+    });
+    fetch('/profile/addstudent', {
+      method: 'POST',
+      body: data,
+    }).then(() => {
+      this.forceUpdate();
     });
   }
 }

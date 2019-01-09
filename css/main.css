@@ -58,6 +58,10 @@ ul.sub-vertical button {
 
 }
 
+#active {
+  color: red
+}
+
 div.leftbar {
   grid-area: leftcolunm;
   width: auto;
